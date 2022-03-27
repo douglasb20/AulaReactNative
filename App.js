@@ -17,13 +17,15 @@ class App extends Component {
 		}
 
 		// Variavel do timer relogio
-		this.timer= null;
-    this.vai    = this.vai.bind(this);
-    this.limpar = this.limpar.bind(this);
+    this.timer   = null;
+    this.vai     = this.vai.bind(this);
+    this.limpar  = this.limpar.bind(this);
+    this.formata = this.formata.bind(this);
 
 	}
 
 	vai(){
+		this.formata(1);
 		if(this.timer != null){
 			// Aqui vai parar o timer
 			clearInterval(this.timer);
@@ -50,6 +52,12 @@ class App extends Component {
 		})
 	}
 
+	formata(num){
+		let min = ('00'+ Math.floor(num / 60).toFixed(0)).slice(-2);
+		let seg = ('00'+ Math.floor(num % 60).toFixed(0)).slice(-2);
+		return `${min}:${seg}`;
+	}
+
 	render(){
 
     return (
@@ -59,7 +67,7 @@ class App extends Component {
 					style={styles.img}
 				/>
 
-				<Text style={styles.timer}>{this.state.numero.toFixed(1)}</Text>
+				<Text style={styles.timer}>{this.formata(this.state.numero)}</Text>
 
 				<View style={styles.btns}>
 					<TouchableOpacity style={styles.btn} onPress={this.vai}>
@@ -73,7 +81,7 @@ class App extends Component {
 
 				<View syle={styles.areaUltimo}>
 					<Text style={styles.textoCorrida}>
-						{this.state.ultimo > 0 ? 'Ultimo Tempo: ' + this.state.ultimo.toFixed(2) + 's' : ''}
+						{this.state.ultimo > 0 ? 'Ultimo Tempo: ' + this.formata(this.state.ultimo) + 's' : ''}
 					</Text>
 				</View>
 
