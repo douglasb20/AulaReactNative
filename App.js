@@ -11,34 +11,42 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			textoFrase: 'São os nossos amigos que nos ensinam as mais valiosas lições.',
-			img: require('./src/biscoito.png'),
+			numero: 0,
+			botao: 'VAI',
+			ultimo: null
 		}
-		this.quebraBiscoito = this.quebraBiscoito.bind(this);
 
-		this.frases = [
-			'A vida trará coisas boas se tiveres paciência.',
-			'Não compense na ira o que lhe falta na razão.',
-			'Defeitos e virtudes são apenas dois lados da mesma moeda.',
-			'A maior de todas as torres começa no solo.',
-			'Não há que ser forte. Há que ser flexível.',
-			'Gente todo dia arruma os cabelos, por que não o coração?',
-			'A juventude não é uma época da vida, é um estado de espírito.',
-			'Siga os bons e aprenda com eles.',
-			'Não importa o tamanho da montanha, ela não pode tapar o sol.',
-			'O bom-senso vai mais longe do que muito conhecimento.',
-			'Quem quer colher rosas deve suportar os espinhos.',
-			'São os nossos amigos que nos ensinam as mais valiosas lições.',
-		];
+		// Variavel do timer relogio
+		this.timer= null;
+    this.vai    = this.vai.bind(this);
+    this.limpar = this.limpar.bind(this);
 
 	}
 
-	quebraBiscoito(){
-		let nmrAleat = Math.floor(Math.random() * this.frases.length );
+	vai(){
+		if(this.timer != null){
+			// Aqui vai parar o timer
+			clearInterval(this.timer);
+			this.timer = null;
+			this.setState({ botao: 'VAI'})
+		}else{
+			
+			this.timer = setInterval( () =>{
+				this.setState({ numero: this.state.numero + 0.1 })
+			},100 );
+			this.setState({ botao: 'PAUSAR'})
+		}
+	}
 
+	limpar(){
+		if(this.timer != null){
+			clearInterval(this.timer)
+			this.timer = null;
+		}
 		this.setState({
-			textoFrase: this.frases[nmrAleat],
-			img: require('./src/biscoitoAberto.png')
+			ultimo: this.state.numero,
+			numero: 0,
+			botao: 'VAI'
 		})
 	}
 
@@ -47,18 +55,28 @@ class App extends Component {
     return (
       <View style={styles.container}>
 				<Image 
-					source={this.state.img}
+					source={require('./src/cronometro.png')}
 					style={styles.img}
 				/>
-				<Text style={styles.textoFrase}>"{this.state.textoFrase}"</Text>
 
-				<TouchableOpacity style={styles.btn} onPress={this.quebraBiscoito}>
-					<View style={styles.btnArea}>
-						<Text style={styles.btnTexto}>
-							Quebrar Biscoito
-						</Text>
-					</View>
-				</TouchableOpacity>
+				<Text style={styles.timer}>{this.state.numero.toFixed(1)}</Text>
+
+				<View style={styles.btns}>
+					<TouchableOpacity style={styles.btn} onPress={this.vai}>
+						<Text style={styles.btnTexto}>{this.state.botao}</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.btn} onPress={this.limpar}>
+						<Text style={styles.btnTexto}>Parar</Text>
+					</TouchableOpacity>
+				</View>
+
+				<View syle={styles.areaUltimo}>
+					<Text style={styles.textoCorrida}>
+						{this.state.ultimo > 0 ? 'Ultimo Tempo: ' + this.state.ultimo.toFixed(2) + 's' : ''}
+					</Text>
+				</View>
+
 		  </View>
     );
   }
@@ -67,39 +85,48 @@ class App extends Component {
 const styles = StyleSheet.create({
 	container:{
 		flex:1,
-		paddingTop: 20,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
+		backgroundColor: "#00aeef"
 	},
 	img:{
-		width: 250,
-		height: 250,
+		
 	},
-	textoFrase:{
-		fontSize: 20,
-		color: '#dd7b22',
-		textAlign: 'center',
-		fontStyle: 'italic'
+	timer:{
+		marginTop: -150,
+		fontSize:50,
+		color: '#fff',
+		fontWeight: 'bold'
+	},
+	btns:{
+		flexDirection: 'row',
+		marginTop: 100,
+
 	},
 	btn:{
-		marginTop:15,
-		width: 230,
-		height: 50,
-		borderWidth: 2,
-		borderColor: '#dd7b22',
-		borderRadius: 25
-	},
-	btnArea:{
-		flex:1,
-		flexDirection: 'row',
+		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: '#fff',
+		height: 40,
+		margin: 17,
+		borderRadius: 9,
+
 	},
 	btnTexto:{
-		color: '#dd7d00',
-		fontSize: 18,
-		fontWeight: 'bold'
+		fontSize: 20,
+		fontWeight: 'bold',
+		color: '#00aeef'
+	},
+	areaUltimo:{
+
+	},
+	textoCorrida:{
+		fontSize: 25,
+		fontStyle: 'italic',
+		color: "#fff"
 	}
+	
 
 })
 
