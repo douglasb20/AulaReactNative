@@ -3,139 +3,65 @@ import {
 View,
 Text,
 StyleSheet,
-TouchableOpacity,
-Image
+ScrollView,
+FlatList
 } from 'react-native';
 
 class App extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			numero: 0,
-			botao: 'VAI',
-			ultimo: null
+			feed: [
+				{id:1, nome: 'Douglas', idade: 33, email: 'douglas@douglas.com'},
+				{id:2, nome: 'Rayene', idade: 28, email: 'rayene@douglas.com'},
+				{id:3, nome: 'Beatriz', idade: 8, email: 'beatriz@douglas.com'},
+				{id:4, nome: 'Bianca', idade: 4, email: 'bianca@douglas.com'},
+				{id:5, nome: 'Ivano', idade: 60, email: 'Ivano@douglas.com'},
+			]
 		}
 
-		// Variavel do timer relogio
-    this.timer   = null;
-    this.vai     = this.vai.bind(this);
-    this.limpar  = this.limpar.bind(this);
-    this.formata = this.formata.bind(this);
-
 	}
 
-	vai(){
-		this.formata(1);
-		if(this.timer != null){
-			// Aqui vai parar o timer
-			clearInterval(this.timer);
-			this.timer = null;
-			this.setState({ botao: 'VAI'})
-		}else{
-			
-			this.timer = setInterval( () =>{
-				this.setState({ numero: this.state.numero + 0.1 })
-			},100 );
-			this.setState({ botao: 'PAUSAR'})
-		}
-	}
-
-	limpar(){
-		if(this.timer != null){
-			clearInterval(this.timer)
-			this.timer = null;
-		}
-		this.setState({
-			ultimo: this.state.numero,
-			numero: 0,
-			botao: 'VAI'
-		})
-	}
-
-	formata(num){
-		let min = ('00'+ Math.floor(num / 60).toFixed(0)).slice(-2);
-		let seg = ('00'+ Math.floor(num % 60).toFixed(0)).slice(-2);
-		return `${min}:${seg}`;
-	}
 
 	render(){
-
-    return (
-      <View style={styles.container}>
-				<Image 
-					source={require('./src/cronometro.png')}
-					style={styles.img}
+		return (
+			<View style={styles.container}>
+				<FlatList 
+					keyExtractor={(item) => item.id}
+					data={this.state.feed}
+					renderItem={({item}) => <Pessoa data={item} />}
 				/>
-
-				<Text style={styles.timer}>{this.formata(this.state.numero)}</Text>
-
-				<View style={styles.btns}>
-					<TouchableOpacity style={styles.btn} onPress={this.vai}>
-						<Text style={styles.btnTexto}>{this.state.botao}</Text>
-					</TouchableOpacity>
-
-					<TouchableOpacity style={styles.btn} onPress={this.limpar}>
-						<Text style={styles.btnTexto}>Parar</Text>
-					</TouchableOpacity>
-				</View>
-
-				<View syle={styles.areaUltimo}>
-					<Text style={styles.textoCorrida}>
-						{this.state.ultimo > 0 ? 'Ultimo Tempo: ' + this.formata(this.state.ultimo) + 's' : ''}
-					</Text>
-				</View>
-
-		  </View>
-    );
-  }
+			</View>
+		);
+    }
 }
 
 const styles = StyleSheet.create({
 	container:{
 		flex:1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: "#00aeef"
 	},
-	img:{
-		
+	areaPessoa:{
+		backgroundColor: '#222',
+		height: 200,
+		marginBottom: 15,
 	},
-	timer:{
-		marginTop: -150,
-		fontSize:50,
-		color: '#fff',
-		fontWeight: 'bold'
-	},
-	btns:{
-		flexDirection: 'row',
-		marginTop: 100,
-
-	},
-	btn:{
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#fff',
-		height: 40,
-		margin: 17,
-		borderRadius: 9,
-
-	},
-	btnTexto:{
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: '#00aeef'
-	},
-	areaUltimo:{
-
-	},
-	textoCorrida:{
-		fontSize: 25,
-		fontStyle: 'italic',
-		color: "#fff"
+	textoPessoa:{
+		color:'white',
+		fontSize:20
 	}
-	
 
 })
+
+class Pessoa extends Component{
+	render(){
+		return(
+			<View style={styles.areaPessoa}>
+				<Text style={styles.textoPessoa}> {this.props.data.nome}</Text>
+				<Text style={styles.textoPessoa}> {this.props.data.idade}</Text>
+				<Text style={styles.textoPessoa}> {this.props.data.email}</Text>
+			</View>
+		)
+	}
+}
 
 export default App;
