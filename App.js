@@ -13,7 +13,7 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			pizza: 0,
+			pizza: 4,
 			pizzas:[
 				{key: 1, nome: 'Calabresa', valor: 35.90},
 				{key: 2, nome: 'Mussarela', valor: 31.90},
@@ -36,6 +36,7 @@ class App extends Component {
 				<Picker
 					selectedValue={this.state.pizza}
 					onValueChange={ (itemValue, itemKey) => this.setState({pizza: itemValue}) }
+					prompt="Selecione uma pizza"
 				>
 					{pizzasItem}
 				</Picker>
