@@ -28,8 +28,12 @@ class App extends Component {
 					value={this.state.valor}
 					minimumTrackTintColor="#2544aa"
 					maximumTrackTintColor='#f00'
+					step={10}
 				/>
-				<Text style={{fontSize:30, color:'black', textAlign:'center'}}>{this.state.valor.toFixed(2)}</Text>
+				<Text 
+				style={{fontSize:30, color:'black', textAlign:'center'}}>
+					{this.state.valor.toFixed(2)}
+					</Text>
 			</View>
 		);
 	}
