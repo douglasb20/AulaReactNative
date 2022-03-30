@@ -3,6 +3,7 @@ import {
 View,
 Text,
 StyleSheet,
+Switch
 
 } from 'react-native';
 
@@ -13,7 +14,7 @@ class App extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			valor: 0
+			valor: false
 		}
 	}
 
@@ -21,19 +22,15 @@ class App extends Component {
 	render(){
 		return (
 			<View style={styles.container}>
-				<Slider 
-					minimumValue={0}
-					maximumValue={100}
-					onValueChange={(value) => this.setState({valor: value})}
+				<Switch 
 					value={this.state.valor}
-					minimumTrackTintColor="#2544aa"
-					maximumTrackTintColor='#f00'
-					step={10}
+					onValueChange={ (value) => {this.setState({ valor: value})}}
+					thumbColor="#f00"
 				/>
-				<Text 
-				style={{fontSize:30, color:'black', textAlign:'center'}}>
-					{this.state.valor.toFixed(2)}
-					</Text>
+
+				<Text style={styles.text}>
+					{this.state.valor ? 'Ligado' :'Desligado'}
+				</Text>
 			</View>
 		);
 	}
@@ -44,6 +41,12 @@ const styles = StyleSheet.create({
 		flex:1,
 		paddingTop: 10
 	},
+	text:{
+		marginTop: 25,
+		fontSize: 30,
+		color: '#000',
+		textAlign: 'center'
+	}
 })
 
 export default App;
