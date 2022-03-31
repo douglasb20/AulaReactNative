@@ -40,6 +40,11 @@ export default class App extends Component{
 		alert('Preencha todos dados corretamente!')
 		return;
 	  }
+
+	  if(this.state.idade < 18){
+		  alert("Você precisa ter mais de 18 anos para abrir uma conta");
+		  return;
+	  }
   
 	  alert(
 		'Conta aberta com sucesso!! \n\n' + 
@@ -77,7 +82,7 @@ export default class App extends Component{
   
 		  <Text style={styles.textoNome}>Idade:</Text>
 		  <TextInput style={styles.input}
-			  
+			  maxLength={2}
 			  placeholder="Digite sua idade"
 			  underlineColorAndroid="transparent"
 			  onChangeText={(texto) => this.setState({idade: texto})}
@@ -102,6 +107,7 @@ export default class App extends Component{
   
 		  <View style={styles.areaSlider}>
 			  <Slider 
+			  	step={10}
 				minimumTrackTintColor="#CF0000" 
 				minimumValue={250} 
 				maximumValue={4000}
