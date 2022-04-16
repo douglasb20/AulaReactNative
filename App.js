@@ -6,208 +6,125 @@ TextInput,
 StyleSheet,
 Switch,
 TouchableOpacity,
+Image,
+FlatList
 
 } from 'react-native';
 
-import Slider from '@react-native-community/slider';
-import {Picker} from '@react-native-picker/picker';
-
+import Lista from './src/Lista';
 
 export default class App extends Component{
 
 	constructor(props){
-	  super(props);
-	  this.state = {
-		nome: '',
-		idade: '',
-		sexo: 0,
-		sexos: [
-		  {sexoNome: 'Masculino', valor: 1},
-		  {sexoNome: 'Feminino', valor: 2},
-		],
-		limite: 250,
-		estudante: false,
-	  };
-  
-	  this.enviarDados = this.enviarDados.bind(this);
-  
-	}
-  
-	//Metodo que é chamado quando você clica no botao Abrir Conta
-	enviarDados(){
-  
-	  if(this.state.nome === '' || this.state.idade === ''){
-		alert('Preencha todos dados corretamente!')
-		return;
-	  }
+		super(props);
+		this.state = {
+			feed: [
+				{
+				  id: '1', 
+				  nome: 'Lucas Silva', 
+				  descricao: 'Mais um dia de muitos bugs :)', 
+				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
+				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto1.png',  
+				  likeada: true, 
+				  likers: 1
+				 },
+				{
+				  id: '2', 
+				  nome: 'Matheus', 
+				  descricao: 'Isso sim é ser raiz!!!!!', 
+				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
+				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto2.png', 
+				  likeada: false, 
+				  likers: 0
+				},
+				{
+				  id: '3', 
+				  nome: 'Jose Augusto', 
+				  descricao: 'Bora trabalhar Haha', 
+				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png', 
+				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',  
+				  likeada: false, 
+				  likers: 3
+				},
+				{
+				  id: '4', 
+				  nome: 'Gustavo Henrique', 
+				  descricao: 'Isso sim que é TI!', 
+				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
+				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto4.png', 
+				  likeada: false, 
+				  likers: 1
+				},
+				{
+				  id: '5', 
+				  nome: 'Guilherme', 
+				  descricao: 'Boa tarde galera do insta...', 
+				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
+				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto5.png',
+				  likeada: false, 
+				  likers: 32
+				}
+			  ]
+		};
 
-	  if(this.state.idade < 18){
-		  alert("Você precisa ter mais de 18 anos para abrir uma conta");
-		  return;
-	  }
-  
-	  alert(
-		'Conta aberta com sucesso!! \n\n' + 
-		'Nome: '+this.state.nome + '\n' + 
-		'Idade: ' + this.state.idade + '\n' +
-		'Sexo: '+ this.state.sexos[this.state.sexo].sexoNome + ' \n' +
-		'Limite Conta: ' + this.state.limite.toFixed(2) + '\n' +
-		'Conta Estudante: ' + ((this.state.estudante)? 'Ativo' : 'Inativo')
-		);
-	
+
 	}
-  
-  
+
 	render(){
-  
-	  //Retorna os items do Picker do sexo M ou F
-	  let sexoItems = this.state.sexos.map((v, k) => {
-		return <Picker.Item key={k} value={k} label={v.sexoNome}/>
-	  }); 
-  
-	  return(
-		<View style={styles.container}>
-		<Text style={styles.bancoLogo}>Banco React</Text>
-  
-		<View style={styles.areaFormulario}>
-  
-	 
-		  <Text style={styles.textoNome}>Nome:</Text>
-		  <TextInput style={styles.input}
-			  placeholder="Digite seu nome"
-			  underlineColorAndroid="transparent"
-			  onChangeText={(texto) => this.setState({nome: texto})}
-			  
-		  />
-  
-		  <Text style={styles.textoNome}>Idade:</Text>
-		  <TextInput style={styles.input}
-			  maxLength={2}
-			  placeholder="Digite sua idade"
-			  underlineColorAndroid="transparent"
-			  onChangeText={(texto) => this.setState({idade: texto})}
-			  keyboardType="numeric" // Deixando teclado apenas numerico
-		  />
-	   
-		  <View style={styles.areaSexo}>  
-			<Text style={styles.textoNome}>Sexo:</Text>
-			<Picker style={styles.pickerSexo} 
-					selectedValue={this.state.sexo} 
-					onValueChange={(itemValue, itemIndex) => this.setState({sexo: itemValue})}>  
-							  
-			{sexoItems}
-			
-			</Picker>
-		  </View>
-  
-		  <View style={styles.limiteArea}>
-				<Text style={styles.textoNome}>Seu Limite:</Text>
-				<Text style={styles.limiteTexto}>R$ {this.state.limite.toFixed(0)}</Text>
-		  </View> 
-  
-		  <View style={styles.areaSlider}>
-			  <Slider 
-			  	step={10}
-				minimumTrackTintColor="#CF0000" 
-				minimumValue={250} 
-				maximumValue={4000}
-				value={this.state.limite}
-				onValueChange={(limite)=> this.setState({limite: limite})}
-			  />
-		  </View>
-  
-  
-		  <View style={styles.areaEstudante}>
-			<Text style={styles.textoNome}>Estudante:</Text>
-			<Switch 
-			style={{paddingTop: 15}}
-			trackColor="#00c300" 
-			value={this.state.estudante} 
-			onValueChange={(valorEstudante) => this.setState({estudante: valorEstudante})}
-			/>
-		  </View>
-  
-  
-		
-		  <TouchableOpacity style={styles.botao} onPress={this.enviarDados} underlayColor="#000000">
-			  <Text style={styles.botaoTexto}>Abrir Conta</Text>
-		  </TouchableOpacity>
-	
-  
-		</View>
-  
-		</View>    
-	  );
-  
+
+		return(
+			<View style={styles.container}>
+				<View style={styles.header}>
+					<TouchableOpacity>
+						<Image 
+							source={require('./src/img/logo.png')}
+							style={styles.logo}
+						/>
+					</TouchableOpacity>
+					
+					<TouchableOpacity>
+						<Image 
+							source={require('./src/img/send.png')}
+							style={styles.send}
+						/>
+					</TouchableOpacity>
+				</View>
+
+				<FlatList 
+					showsVerticalScrollIndicator={false}
+					keyExtractor={(item) => item.id}
+					data={this.state.feed}
+					renderItem={ ({item}) => <Lista data={item} />}
+				/>
+
+			</View>    
+		);
+
 	}
-  
-  }
-  
-  const styles = StyleSheet.create({
+
+}
+
+const styles = StyleSheet.create({
 	container:{
-	  paddingTop: 20,
-	  flex: 1,
+        flex       : 1,
 	},
-	areaFormulario:{
-	  flexDirection: 'column',
-	  margin: 10,
+	header:{
+		height:55,
+		backgroundColor: '#FFF',
+		flexDirection:'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		padding: 7,
+
+		borderBottomWidth: 0.2,
+		shadowColor: '#000',
+		elevation: 2
 	},
-	bancoLogo:{
-	  textAlign: 'center',
-	  fontSize: 30,
-	  fontWeight: 'bold',
-	  color: '#000000'
+	logo:{
+
 	},
-	textoNome:{
-	  fontSize: 17,
-	  color: '#000000',
-	  fontWeight: 'bold',
-	},
-	input:{
-	  borderWidth: 1,
-	  borderRadius: 4,
-	  borderColor: '#999999',
-	  backgroundColor: '#EEEEEE',
-	  color: '#000000',
-	  height: 38,
-	  padding: 10,
-	  marginBottom: 5,
-	  marginTop: 5,
-	},
-	areaSexo:{
-	   flexDirection: 'row',
-	   alignItems: 'center',
-	   paddingBottom: 5
-   },
-   pickerSexo:{
-	  flex:1
-	},
-	limiteArea:{
-	  flexDirection:'row',
-	  paddingBottom: 5,
-  },
-  limiteTexto:{
-	color: '#FF0000',
-	fontSize: 17,
-	fontWeight: 'bold',
-	paddingLeft: 5,
-  },
-  areaEstudante:{
-	flexDirection: 'row', 
-	alignItems: 'center'
-  },
-  botao:{
-   height: 35,
-   justifyContent: 'center',
-   alignItems: 'center',
-   backgroundColor: '#000000',
-   borderRadius: 150,
-   margin: 20
-  },
-  botaoTexto:{
-	 fontSize: 20,
-	 fontWeight: 'bold',
-	 color: '#FFFFFF'
-  },
-  
-  });
+	send:{
+		width:23,
+		height:23,
+	}
+});
