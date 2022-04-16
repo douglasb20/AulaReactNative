@@ -7,95 +7,68 @@ StyleSheet,
 Switch,
 TouchableOpacity,
 Image,
+Keyboard,
 FlatList
 
 } from 'react-native';
 
-import Lista from './src/Lista';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends Component{
 
 	constructor(props){
 		super(props);
 		this.state = {
-			feed: [
-				{
-				  id: '1', 
-				  nome: 'Lucas Silva', 
-				  descricao: 'Mais um dia de muitos bugs :)', 
-				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
-				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto1.png',  
-				  likeada: true, 
-				  likers: 1
-				 },
-				{
-				  id: '2', 
-				  nome: 'Matheus', 
-				  descricao: 'Isso sim é ser raiz!!!!!', 
-				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
-				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto2.png', 
-				  likeada: false, 
-				  likers: 0
-				},
-				{
-				  id: '3', 
-				  nome: 'Jose Augusto', 
-				  descricao: 'Bora trabalhar Haha', 
-				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png', 
-				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',  
-				  likeada: false, 
-				  likers: 3
-				},
-				{
-				  id: '4', 
-				  nome: 'Gustavo Henrique', 
-				  descricao: 'Isso sim que é TI!', 
-				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png', 
-				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto4.png', 
-				  likeada: false, 
-				  likers: 1
-				},
-				{
-				  id: '5', 
-				  nome: 'Guilherme', 
-				  descricao: 'Boa tarde galera do insta...', 
-				  imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png', 
-				  imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto5.png',
-				  likeada: false, 
-				  likers: 32
-				}
-			  ]
+			input: '',
+			nome: ''
 		};
 
+		this.gravaNome = this.gravaNome.bind(this)
 
+	}
+
+	// ComponentDidMount - Quando o componente é montado em tela
+	async componentDidMount(){
+		await AsyncStorage.getItem('nome').then( (value) => {
+			this.setState({
+				nome: value
+			})
+		} );
+	}
+
+	//ComponentDidUpdate - Toda vez que um state é atualizado, fazer algo
+	async componentDidUpdate(_, prevState){
+		const nome = this.state.nome;
+		if(prevState !== nome){
+			await AsyncStorage.setItem('nome', nome);
+		}
+	}
+
+	gravaNome(){
+		this.setState({
+			nome: this.state.input,
+			input: ''
+		});
+		alert('Salvo com sucesso');
+		Keyboard.dismiss();
 	}
 
 	render(){
 
 		return(
 			<View style={styles.container}>
-				<View style={styles.header}>
-					<TouchableOpacity>
-						<Image 
-							source={require('./src/img/logo.png')}
-							style={styles.logo}
-						/>
-					</TouchableOpacity>
-					
-					<TouchableOpacity>
-						<Image 
-							source={require('./src/img/send.png')}
-							style={styles.send}
-						/>
+				<View style={styles.viewInput}>
+					<TextInput 
+						style={styles.input}
+						value={this.state.input}
+						onChangeText={(text) => this.setState({input: text})}
+						underlineColorAndroid="transparent"
+					/>
+					<TouchableOpacity onPress={this.gravaNome}>
+						<Text style={styles.botao}>+</Text>
 					</TouchableOpacity>
 				</View>
-
-				<FlatList 
-					showsVerticalScrollIndicator={false}
-					keyExtractor={(item) => item.id}
-					data={this.state.feed}
-					renderItem={ ({item}) => <Lista data={item} />}
-				/>
+				<Text style={styles.nome}>{this.state.nome}</Text>
 
 			</View>    
 		);
@@ -107,24 +80,32 @@ export default class App extends Component{
 const styles = StyleSheet.create({
 	container:{
         flex       : 1,
+		marginTop: 20,
+		alignItems:'center'
 	},
-	header:{
-		height:55,
-		backgroundColor: '#FFF',
-		flexDirection:'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		padding: 7,
-
-		borderBottomWidth: 0.2,
-		shadowColor: '#000',
-		elevation: 2
+	viewInput:{	
+		flexDirection: 'row',
+		alignItems:'center',
 	},
-	logo:{
-
+	input:{
+		flex:1,
+		height: 40,
+		borderColor: '#000',
+		borderWidth: 1,
+		margin: 10,
 	},
-	send:{
-		width:23,
-		height:23,
+	botao:{
+		backgroundColor: '#222',
+		color: '#FFF',
+		height:40,
+		padding: 10,
+		marginRight: 4
+	},
+	nome:{
+		marginTop: 15,
+		fontSize:30,
+		textAlign: 'center',
+		color: '#000'
 	}
+	
 });
