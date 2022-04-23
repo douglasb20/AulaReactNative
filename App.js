@@ -5,7 +5,7 @@ Text,
 TextInput,
 StyleSheet,
 Button,
-Modal,
+ActivityIndicator,
 TouchableOpacity,
 Image,
 Keyboard,
@@ -13,45 +13,48 @@ FlatList
 
 } from 'react-native';
 
+import api from './src/services/api';
+import Filmes from './src/Filmes';
 
 export default class App extends Component{
+
+	async componentDidMount(){
+		const response = await api.get('r-api/?api=filmes');
+		this.setState({
+			filmes: response.data,
+			loading: false
+		})
+	}
 
 	constructor(props){
 		super(props);
 		this.state = {
-			modalVisible: false
+			filmes: [],
+			loading: true
 		};
-        this.entrar = this.entrar.bind(this);
-        this.fechar = this.fechar.bind(this);
-	}
-
-	entrar(){
-		this.setState({
-			modalVisible: true
-		})
-	}
-
-	fechar(){
-		this.setState({
-			modalVisible: false
-		})
 	}
 
 	render(){
 
-		return(
-			<View style={styles.container}>
-				<Button title='Entrar' onPress={this.entrar} />
-				<Modal animationType='fade' visible={this.state.modalVisible}>
-					<View style={{backgroundColor:'#292929', flex:1}}>
-						<Text style={{color:'#FFF', fontSize:18}}>
-							Seja Bem-vindo!
-						</Text>
-						<Button title="Fechar" onPress={this.fechar}/>
-					</View>
-				</Modal>
-			</View>    
-		);
+		if(this.state.loading){
+			return(
+				<View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
+					<ActivityIndicator color="#09A6FF" size={40} />
+				</View>
+			)
+		}else{
+
+			return(
+				<View style={styles.container}>
+					<FlatList 
+						data={this.state.filmes}
+						keyExtractor={item => item.id.toString()}
+						renderItem = { ({item}) => <Filmes data={item} />}
+					/>
+				</View>    
+			);
+		}
+
 
 	}
 
@@ -60,8 +63,6 @@ export default class App extends Component{
 const styles = StyleSheet.create({
 	container:{
         flex       : 1,
-		alignItems:'center',
-		justifyContent: 'center',
 		backgroundColor: '#DDD'
 	},
 	
