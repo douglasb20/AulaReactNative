@@ -13,57 +13,28 @@ FlatList
 
 } from 'react-native';
 
-import api from './src/services/api';
-import Filmes from './src/Filmes';
+import Conversor from './src/Conversor';
 
 export default class App extends Component{
 
-	async componentDidMount(){
-		const response = await api.get('r-api/?api=filmes');
-		this.setState({
-			filmes: response.data,
-			loading: false
-		})
-	}
-
-	constructor(props){
-		super(props);
-		this.state = {
-			filmes: [],
-			loading: true
-		};
-	}
-
 	render(){
 
-		if(this.state.loading){
-			return(
-				<View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
-					<ActivityIndicator color="#09A6FF" size={40} />
-				</View>
-			)
-		}else{
-
-			return(
-				<View style={styles.container}>
-					<FlatList 
-						data={this.state.filmes}
-						keyExtractor={item => item.id.toString()}
-						renderItem = { ({item}) => <Filmes data={item} />}
-					/>
-				</View>    
-			);
-		}
-
-
+		return(
+			<View style={styles.container}>
+				<Conversor moedaA="USD" moedaB="BRL"/>
+				<Conversor moedaA="EUR" moedaB="BRL"/>
+			</View>    
+		);
 	}
 
 }
 
 const styles = StyleSheet.create({
 	container:{
-        flex       : 1,
-		backgroundColor: '#DDD'
+        flex            : 1,
+        justifyContent  : 'center',
+        alignItems      : 'center',
+        backgroundColor : '#DDD'
 	},
 	
 });
