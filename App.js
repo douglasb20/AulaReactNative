@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
 View,
 Text,
@@ -13,45 +13,22 @@ FlatList
 
 } from 'react-native';
 
-export default class App extends Component{
-	constructor(props){
-		super(props);
-		this.state = {
-			LarAnimada: new Animated.Value(0)
-		}
 
-		Animated.timing(
-			this.state.LarAnimada,
-			{
-				toValue: 100,
-				duration:3000,
-				useNativeDriver: false
-			}
-		).start()
+export default function App(){
+	const [nome, setNome] = useState("");
 
-	}
+	return(
+		<View style={styles.container}>
 
+			<TextInput style={styles.input} placeholder='Seu nome' value={nome} onChangeText={ text => setNome(text)} />
 
+			<Text style={styles.text}>
+				{nome.toUpperCase()}
+			</Text>
 
-	render(){
-		let porcent = this.state.LarAnimada.interpolate({
-			inputRange:[0,100],
-			outputRange:['0%','100%']
-		})
-		return(
-			<View style={styles.container}>
-				<Animated.View 
-					style={{
-						backgroundColor:'#4169e1',
-						width: porcent,
-						height:25
-					}}
-				>
+		</View>    
+	);
 
-				</Animated.View>
-			</View>    
-		);
-	}
 
 }
 
@@ -59,8 +36,28 @@ const styles = StyleSheet.create({
 	container:{
         flex            : 1,
         justifyContent  : 'center',
-        alignItems      : 'flex-start',
+        alignItems      : 'center',
         backgroundColor : '#DDD'
 	},
-	
+	text:{
+		fontSize:25,
+		color: 'black'
+	},
+	btn:{
+		padding:15,
+		backgroundColor: '#05f',
+		borderRadius: 10
+	},
+	btnText:{
+		color: 'white',
+		fontSize:18
+	},
+	input:{
+		borderWidth: StyleSheet.hairlineWidth,
+		width: '80%',
+		marginBottom:15,
+		paddingStart:15
+
+	}
 });
+
